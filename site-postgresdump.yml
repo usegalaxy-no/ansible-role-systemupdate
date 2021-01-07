@@ -1,9 +1,0 @@
----
-
-- hosts:
-    - db.usegalaxy.no
-  vars:
-  become: true
-  roles:
-    - ansible-role-postgresbackup
-  tags: pgdump

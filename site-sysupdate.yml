@@ -1,0 +1,9 @@
+---
+
+- hosts:
+    - test
+  vars:
+  become: true
+  roles:
+    - ansible-role-systemupdate
+  tags: sysupdate
