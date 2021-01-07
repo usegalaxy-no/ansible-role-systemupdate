@@ -1,0 +1,10 @@
+---
+# handlers file for spacewalk.client
+
+- name: disable yum-cron
+  service:
+    name: yum-cron
+    state: stopped
+    enabled: false
+  ignore_errors: yes
+

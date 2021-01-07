@@ -1,0 +1,41 @@
+---
+# tasks file for spacewalk.client centOS 7
+
+- name: ensure a list of packages installed
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - epel-release
+    - yum-plugin-tmprepo
+    - wget
+
+- name: install tmprepo
+  command: yum install -y spacewalk-repo --tmprepo=https://copr-be.cloud.fedoraproject.org/results/%40spacewalkproject/spacewalk-2.9/epel-7-x86_64/repodata/repomd.xml --nogpg
+
+- name: ensure a list of packages installed
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - rhn-client-tools
+    - rhn-check
+    - rhn-setup
+    - rhnsd
+    - m2crypto
+    - yum-rhn-plugin
+    - osad
+
+- name: get ca cert
+  command: wget -O /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT http://space.ii.uib.no/pub/RHN-ORG-TRUSTED-SSL-CERT
+
+- name: register client
+  command: rhnreg_ks --activationkey 1-e0ebaf789e1327c5b6f8e20bf74df313 --serverUrl https://kattehale.ii.uib.no/XMLRPC
+  notify: disable yum-cron
+  ignore_errors: true
+
+- name: restart osad
+  service:
+    name: osad
+    state: restarted
+    enabled: true

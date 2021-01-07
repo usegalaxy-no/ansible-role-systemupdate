@@ -1,0 +1,24 @@
+---
+# tasks for spacewalk.client
+
+- include: centos7.yml
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '7'
+
+- include: centos8.yml
+  when: ansible_distribution == 'CentOS' and ansible_distribution_major_version == '8'
+
+
+- name: "restart rhnsd job"
+  cron:
+    name: "restart rhnsd , needed for spacewalk / osa"
+    user: root
+    minute: "0"
+    hour: "0"
+    job: "/usr/sbin/service rhnsd restart > /dev/null 2>&1"
+
+- name: disable yum-cron
+  service:
+    name: yum-cron
+    enabled: false
+    state: stopped
+  ignore_errors: yes

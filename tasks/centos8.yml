@@ -1,0 +1,43 @@
+---
+# tasks file for spacewalk.client centOS 8
+
+- name: ensure a list of packages installed
+  dnf:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - epel-release
+    - wget
+
+- name: add repo
+  command: dnf config-manager --add-repo https://copr-be.cloud.fedoraproject.org/results/%40spacewalkproject/spacewalk-2.10/epel-8-x86_64/ --nogpg
+
+- name: ensure a list of packages installed
+  dnf:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - rhn-client-tools
+    - rhnpush
+    - rhn-check
+    - rhn-setup
+    - dnf-plugin-spacewalk
+    - rhncfg
+    - spacewalk-oscap
+    - rhn-custom-info
+    - rhncfg-actions
+    - rhnsd
+    - osad
+    - yum-rhn-plugin
+
+- name: get ca cert
+  command: wget -O /usr/share/rhn/RHN-ORG-TRUSTED-SSL-CERT http://space.ii.uib.no/pub/RHN-ORG-TRUSTED-SSL-CERT
+
+- name: register client
+  command: rhnreg_ks --activationkey 1-e0ebaf789e1327c5b6f8e20bf74df313 --serverUrl https://kattehale.ii.uib.no/XMLRPC
+
+- name: restart osad
+  service:
+    name: osad
+    state: restarted
+    enabled: true

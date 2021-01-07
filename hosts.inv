@@ -1,0 +1,12 @@
+[prod]
+usegalaxy.no
+db.usegalaxy.no
+slurm.usegalaxy.no
+[prod:vars]
+ansible_connection=ssh	ansible_user=sysadmin
+[test]
+test.usegalaxy.no
+test-db.usegalaxy.no
+test-slurm.usegalaxy.no
+[test:vars]
+ansible_connection=ssh	ansible_user=sysadmin
